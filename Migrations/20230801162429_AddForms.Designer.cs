@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using HRMS.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -12,9 +13,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HRMSCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230801162429_AddForms")]
+    partial class AddForms
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -174,8 +177,7 @@ namespace HRMSCore.Migrations
                 {
                     b.HasOne("HRMSCore.Models.FormStep", null)
                         .WithMany("Rows")
-                        .HasForeignKey("FormStepId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FormStepId");
                 });
 
             modelBuilder.Entity("HRMSCore.Models.FormField", b =>
@@ -188,8 +190,7 @@ namespace HRMSCore.Migrations
 
                     b.HasOne("HRMSCore.Models.FieldsRow", null)
                         .WithMany("Fields")
-                        .HasForeignKey("FieldsRowId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FieldsRowId");
 
                     b.Navigation("Field");
                 });
@@ -198,8 +199,7 @@ namespace HRMSCore.Migrations
                 {
                     b.HasOne("HRMSCore.Models.Form", null)
                         .WithMany("Steps")
-                        .HasForeignKey("FormId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FormId");
                 });
 
             modelBuilder.Entity("HRMSCore.Models.FieldsRow", b =>
