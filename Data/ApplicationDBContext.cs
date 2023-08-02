@@ -12,6 +12,7 @@ namespace HRMS.Data
     public DbSet<Form> Forms { get; set; } = null!;
     public DbSet<Field> Fields { get; set; } = null!;
     public DbSet<DataSource> DataSources { get; set; } = null!;
+    public DbSet<User> Users { get; set; } = null!;
 
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -40,6 +41,24 @@ namespace HRMS.Data
             .WithOne()
             .OnDelete(DeleteBehavior.Cascade);
 
+
+      // when form is deleted delete approval cycle 
+      modelBuilder.Entity<ApprovalCycle>()
+          .HasOne(ac => ac.Form)
+          .WithOne(f => f.ApprovalCycle)
+          .HasForeignKey<Form>()
+          .OnDelete(DeleteBehavior.Cascade);
+
+      modelBuilder.Entity<ApprovalCycleStep>()
+            .HasOne(acs => acs.Approver)
+            .WithMany()
+            .HasForeignKey(acs => acs.ApproverId)
+            .IsRequired();
+
+      modelBuilder.Entity<ApprovalCycle>()
+            .HasMany(ac => ac.Steps)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
 
       base.OnModelCreating(modelBuilder);
     }

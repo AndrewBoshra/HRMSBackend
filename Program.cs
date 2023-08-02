@@ -2,6 +2,7 @@ using HRMS.Data;
 using HRMSCore.Services.DataSourceService;
 using HRMSCore.Services.FieldService;
 using HRMSCore.Services.FormService;
+using HRMSCore.Services.UserService;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddScoped<IDataSourceService, DataSourceService>();
 builder.Services.AddScoped<IFieldService, FieldService>();
 builder.Services.AddScoped<IFormService, FormService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

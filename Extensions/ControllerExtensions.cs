@@ -19,7 +19,7 @@ namespace Extensions.ControllerExtensions
 
       var error = result.Error!;
 
-      if (error is DomainError)
+      if (error is ConflictError)
       {
         return controller.BadRequest(error);
       }

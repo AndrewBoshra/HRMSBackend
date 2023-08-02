@@ -6,6 +6,7 @@ using AutoMapper;
 using HRMSCore.Dtos.DataSourceDtos;
 using HRMSCore.Dtos.FieldDtos;
 using HRMSCore.Dtos.FormDtos;
+using HRMSCore.Dtos.UserDtos;
 using HRMSCore.Models;
 
 namespace HRMSCore
@@ -39,13 +40,18 @@ namespace HRMSCore
       CreateMap<AddFormField, FormField>();
 
       CreateMap<AddFieldsRow, FieldsRow>();
-      // .ForMember(dest => dest.Fields, opt => opt.Ignore())
-      // .ForMember(dest => dest.Order, opt => opt.Ignore());
 
       CreateMap<AddFormStep, FormStep>();
-      // .ForMember(dest => dest.Order, opt => opt.Ignore());
 
       CreateMap<AddForm, Form>();
+
+
+
+      CreateMap<User, GetUser>();
+      CreateMap<GetUser, User>();
+
+      CreateMap<AddUser, User>();
+      CreateMap<UpdateUser, User>();
 
 
     }
