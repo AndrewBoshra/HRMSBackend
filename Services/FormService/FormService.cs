@@ -25,7 +25,7 @@ namespace HRMSCore.Services.FormService
       _context = context;
     }
 
-    async Task<Result<GetForm>> IFormService.AddForm(AddForm newForm)
+    async Task<Result<GetFormDetails>> IFormService.AddForm(AddForm newForm)
     {
       List<int> fieldsIds = newForm.Steps
                                   .SelectMany(step =>
@@ -35,15 +35,34 @@ namespace HRMSCore.Services.FormService
       List<Field> fields = await _context.Fields
                                           .Where(field => fieldsIds.Contains(field.Id))
                                           .ToListAsync();
-
       if (fields.Count != fieldsIds.Count)
       {
         List<int> notFoundFieldsIds = fieldsIds.Except(fields.Select(field => field.Id)).ToList();
-        return Result<GetForm>.Fail(
+        return Result<GetFormDetails>.Fail(
            new DomainError(
             $"Fields with ids {string.Join(", ", notFoundFieldsIds)} not found"
           )
         );
+      }
+
+      List<int>? userIds = newForm.ApprovalCycle?
+                                  .Steps
+                                  .Select(step => step.ApproverId)
+                                  .ToList();
+      if (userIds?.Count > 0)
+      {
+        List<User> users = await _context.Users
+                                          .Where(user => userIds.Contains(user.Id))
+                                          .ToListAsync();
+        if (users.Count != userIds.Count)
+        {
+          List<int> notFoundUserIds = userIds.Except(users.Select(user => user.Id)).ToList();
+          return Result<GetFormDetails>.Fail(
+             new DomainError(
+              $"Users with ids {string.Join(", ", notFoundUserIds)} not found"
+            )
+          );
+        }
       }
 
       Form form = _mapper.Map<Form>(newForm);
@@ -52,7 +71,7 @@ namespace HRMSCore.Services.FormService
       _context.Forms.Add(form);
       await _context.SaveChangesAsync();
 
-      return Result<GetForm>.Ok(_mapper.Map<GetForm>(form));
+      return Result<GetFormDetails>.Ok(_mapper.Map<GetFormDetails>(form));
 
     }
 
@@ -72,15 +91,11 @@ namespace HRMSCore.Services.FormService
 
     async Task<Result<List<GetForm>>> IFormService.GetAllForms()
     {
-      List<Form> forms = await _context.Forms.Include(form => form.Steps.OrderBy(step => step.Order))
-                                              .ThenInclude(step => step.Rows.OrderBy(row => row.Order))
-                                              .ThenInclude(row => row.Fields.OrderBy(field => field.Order))
-                                              .ThenInclude(field => field.Field)
-                                              .ToListAsync();
+      List<Form> forms = await _context.Forms.ToListAsync();
       return Result<List<GetForm>>.Ok(_mapper.Map<List<GetForm>>(forms));
     }
 
-    async Task<Result<GetForm>> IFormService.GetFormById(int id)
+    async Task<Result<GetFormDetails>> IFormService.GetFormById(int id)
     {
       Form? form = await _context.Forms.Include(form => form.Steps.OrderBy(step => step.Order))
                                         .ThenInclude(step => step.Rows.OrderBy(row => row.Order))
@@ -89,13 +104,13 @@ namespace HRMSCore.Services.FormService
                                         .FirstOrDefaultAsync(form => form.Id == id);
       if (form == null)
       {
-        return Result<GetForm>.Fail(
+        return Result<GetFormDetails>.Fail(
            new EntityNotFoundError(
             $"Form with id {id} not found"
           )
         );
       }
-      return Result<GetForm>.Ok(_mapper.Map<GetForm>(form));
+      return Result<GetFormDetails>.Ok(_mapper.Map<GetFormDetails>(form));
     }
   }
 }

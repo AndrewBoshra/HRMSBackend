@@ -10,8 +10,8 @@ namespace HRMSCore.Services.FormService
   public interface IFormService
   {
     Task<Result<List<GetForm>>> GetAllForms();
-    Task<Result<GetForm>> GetFormById(int id);
-    Task<Result<GetForm>> AddForm(AddForm newForm);
+    Task<Result<GetFormDetails>> GetFormById(int id);
+    Task<Result<GetFormDetails>> AddForm(AddForm newForm);
     Task<Result<int>> DeleteForm(int id);
   }
 }

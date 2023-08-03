@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
+using HRMSCore.Dtos.ApprovalCycleDtos;
 using HRMSCore.Dtos.DataSourceDtos;
 using HRMSCore.Dtos.FieldDtos;
 using HRMSCore.Dtos.FormDtos;
@@ -33,6 +34,8 @@ namespace HRMSCore
       CreateMap<FormField, GetFormField>();
       CreateMap<FieldsRow, GetFieldsRow>();
       CreateMap<FormStep, GetFormStep>();
+      CreateMap<Form, GetFormDetails>();
+
       CreateMap<Form, GetForm>();
 
 
@@ -54,6 +57,9 @@ namespace HRMSCore
       CreateMap<UpdateUser, User>();
 
 
+
+      CreateMap<AddApprovalCycleStep, ApprovalCycleStep>();
+      CreateMap<AddApprovalCycle, ApprovalCycle>();
     }
   }
 }

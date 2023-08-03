@@ -19,11 +19,14 @@ namespace Extensions.ControllerExtensions
 
       var error = result.Error!;
 
-      if (error is ConflictError)
+      if (error is DomainError)
       {
         return controller.BadRequest(error);
       }
-
+      if (error is ConflictError)
+      {
+        return controller.Conflict(error);
+      }
       if (error is EntityNotFoundError)
       {
         return controller.NotFound(error);

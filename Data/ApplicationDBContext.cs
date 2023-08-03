@@ -46,8 +46,17 @@ namespace HRMS.Data
       modelBuilder.Entity<ApprovalCycle>()
           .HasOne(ac => ac.Form)
           .WithOne(f => f.ApprovalCycle)
-          .HasForeignKey<Form>()
+          .IsRequired(false)
           .OnDelete(DeleteBehavior.Cascade);
+
+      // form may or may not have approval cycle
+      // however approval cycle must have form
+
+      modelBuilder.Entity<Form>()
+          .HasOne(f => f.ApprovalCycle)
+          .WithOne(ac => ac.Form)
+          .HasForeignKey<ApprovalCycle>()
+          .IsRequired(false);
 
       modelBuilder.Entity<ApprovalCycleStep>()
             .HasOne(acs => acs.Approver)

@@ -78,8 +78,8 @@ namespace HRMSCore.Services.UserService
 
     async Task<Result<GetUser>> IUserService.UpdateUser(int id, UpdateUser updatedUser)
     {
-      User? User = await _context.Users.FirstOrDefaultAsync(User => User.Id == id);
-      if (User == null)
+      User? user = await _context.Users.FirstOrDefaultAsync(User => User.Id == id);
+      if (user == null)
       {
         return Result<GetUser>.Fail(
            new EntityNotFoundError(
@@ -88,9 +88,19 @@ namespace HRMSCore.Services.UserService
         );
       }
 
-      _mapper.Map(updatedUser, User);
+      var isEmailTaken = await _context.Users.AnyAsync(User => User.Email == updatedUser.Email && User.Id != id);
+      if (isEmailTaken)
+      {
+        return Result<GetUser>.Fail(
+           new DomainError(
+            $"Email {updatedUser.Email} is already taken"
+          )
+        );
+      }
+
+      _mapper.Map(updatedUser, user);
       await _context.SaveChangesAsync();
-      return Result<GetUser>.Ok(_mapper.Map<GetUser>(User));
+      return Result<GetUser>.Ok(_mapper.Map<GetUser>(user));
     }
   }
 }

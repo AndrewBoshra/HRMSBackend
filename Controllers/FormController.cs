@@ -25,13 +25,13 @@ namespace HRMSCore.Controllers
     }
 
     [HttpGet("{id}")]
-    public Task<ActionResult<GetForm>> GetFormById(int id)
+    public Task<ActionResult<GetFormDetails>> GetFormById(int id)
     {
       return this.ToResponseAsync(_formService.GetFormById(id));
     }
 
     [HttpPost]
-    public Task<ActionResult<GetForm>> AddForm(AddForm newForm)
+    public Task<ActionResult<GetFormDetails>> AddForm(AddForm newForm)
     {
       return this.ToResponseAsync(_formService.AddForm(newForm));
     }
