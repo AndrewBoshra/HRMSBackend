@@ -60,6 +60,9 @@ namespace HRMSCore
 
       CreateMap<AddApprovalCycleStep, ApprovalCycleStep>();
       CreateMap<AddApprovalCycle, ApprovalCycle>();
+
+      CreateMap<ApprovalCycleStep, GetApprovalCycleStep>();
+      CreateMap<ApprovalCycle, GetApprovalCycle>();
     }
   }
 }

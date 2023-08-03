@@ -1,3 +1,4 @@
+using HRMSCore.Dtos.ApprovalCycleDtos;
 using HRMSCore.Dtos.FieldDtos;
 
 namespace HRMSCore.Dtos.FormDtos
@@ -17,6 +18,7 @@ namespace HRMSCore.Dtos.FormDtos
   public record GetFormDetails(
     int Id,
     string Name,
-    List<GetFormStep> Steps
+    List<GetFormStep> Steps,
+    GetApprovalCycle? ApprovalCycle
   );
 }

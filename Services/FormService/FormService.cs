@@ -97,11 +97,16 @@ namespace HRMSCore.Services.FormService
 
     async Task<Result<GetFormDetails>> IFormService.GetFormById(int id)
     {
-      Form? form = await _context.Forms.Include(form => form.Steps.OrderBy(step => step.Order))
-                                        .ThenInclude(step => step.Rows.OrderBy(row => row.Order))
-                                        .ThenInclude(row => row.Fields.OrderBy(field => field.Order))
-                                        .ThenInclude(field => field.Field)
-                                        .FirstOrDefaultAsync(form => form.Id == id);
+      Form? form = await _context.Forms
+        .Include(form => form.Steps.OrderBy(step => step.Order))
+          .ThenInclude(step => step.Rows.OrderBy(row => row.Order))
+            .ThenInclude(row => row.Fields.OrderBy(field => field.Order))
+              .ThenInclude(field => field.Field)
+        .Include(form => form.ApprovalCycle)
+          .ThenInclude(cycle => cycle!.Steps)
+            .ThenInclude(step => step.Approver)
+        .FirstOrDefaultAsync(form => form.Id == id);
+
       if (form == null)
       {
         return Result<GetFormDetails>.Fail(
